@@ -14,6 +14,7 @@ import com.pedidos.dao.PedidoItemDaoPage;
 import com.pedidos.dto.PedidoItemDTO;
 import com.pedidos.exceptions.ExceptionsService;
 import com.pedidos.model.PedidoItem;
+import com.pedidos.models.enums.TipoProdutoEnum;
 import com.pedidos.service.PedidoItemService;
 
 @Service
@@ -60,7 +61,7 @@ public class PedidoItemServiceImpl implements PedidoItemService {
 	}
 
 	@Override
-	public Double retornarValorTotalItem(UUID uuid, String tipoProduto) {
+	public Double retornarValorTotalItem(UUID uuid, TipoProdutoEnum tipoProduto) {
 		Double valor = this.pedidoItemDaoPage.retornarValorTotalItem(uuid, tipoProduto);
 		if (Objects.nonNull(valor)) {
 			return valor;

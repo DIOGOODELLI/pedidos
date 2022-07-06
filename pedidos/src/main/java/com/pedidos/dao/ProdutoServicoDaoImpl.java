@@ -21,6 +21,7 @@ import org.springframework.stereotype.Repository;
 
 import com.pedidos.dto.ProdutoServicoDTO;
 import com.pedidos.model.ProdutoServico;
+import com.pedidos.models.enums.TipoProdutoEnum;
 
 @Repository
 public class ProdutoServicoDaoImpl implements ProdutoServicoDao {
@@ -37,8 +38,8 @@ public class ProdutoServicoDaoImpl implements ProdutoServicoDao {
 		if (Objects.nonNull(filtros.getDescricao()) && StringUtils.isNotEmpty(filtros.getDescricao())) {
 			predicates.add(criterio.like(criterio.lower(root.<String>get("descricao")), "%" + filtros.getDescricao().toLowerCase() + "%"));
 		}
-		if (Objects.nonNull(filtros.getTipo()) && StringUtils.isNotEmpty(filtros.getTipo())) {
-			predicates.add(criterio.like(criterio.lower(root.<String>get("tipo")), filtros.getTipo().toLowerCase() ));
+		if (Objects.nonNull(filtros.getTipo())) {
+			predicates.add(criterio.equal(root.<TipoProdutoEnum>get("tipo"), filtros.getTipo()));
 		}
 		if (Objects.nonNull(filtros.getEnabled())) {
 			predicates.add(criterio.equal(root.<Boolean>get("enabled"), filtros.getEnabled()));

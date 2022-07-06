@@ -47,6 +47,9 @@ public class PedidoItem implements Serializable{
 	@Column
 	private Double quantidade;;
 	
+	@Column
+	private Boolean enabled = true;;
+	
 	public UUID getId() {
 		return id;
 	}
@@ -93,5 +96,13 @@ public class PedidoItem implements Serializable{
 
 	public void setValor_total(Double valor_total) {
 		this.valor_total = valor_total;
+	}
+
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
 	}
 }

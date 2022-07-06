@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,6 +14,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.ColumnDefault;
+
+import com.pedidos.models.enums.TipoProdutoEnum;
 
 @Entity
 @Table(name = "tb_produto_servico")
@@ -30,7 +34,8 @@ public class ProdutoServico implements Serializable{
 	
 	@NotNull
 	@Column
-	private String tipo;
+	@Enumerated(EnumType.STRING)
+	private TipoProdutoEnum tipo;
 	
     @ColumnDefault("true")
 	@Column()
@@ -51,12 +56,12 @@ public class ProdutoServico implements Serializable{
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-
-	public String getTipo() {
+	
+	public TipoProdutoEnum getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(String tipo) {
+	public void setTipo(TipoProdutoEnum tipo) {
 		this.tipo = tipo;
 	}
 

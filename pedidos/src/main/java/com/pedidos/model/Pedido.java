@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,6 +17,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.ColumnDefault;
+
+import com.pedidos.models.enums.SitucaoPedidoEnum;
 
 @Entity
 @Table(name = "tb_pedido")
@@ -30,21 +34,12 @@ public class Pedido implements Serializable{
 	@NotNull
 	@Column()
 	@ColumnDefault("0.00")
-	private Double valor_servicos;
-	
-	@NotNull
-	@Column()
-	@ColumnDefault("0.00")
-	private Double valor_produtos;
-	
-	@NotNull
-	@Column()
-	@ColumnDefault("0.00")
 	private Double valor_total;
 	
 	@NotNull
 	@Column
-	private String situacao; 
+	@Enumerated(EnumType.STRING)
+	private SitucaoPedidoEnum situacao; 
 	
 	@NotNull
 	@Column()
@@ -69,22 +64,6 @@ public class Pedido implements Serializable{
 		this.id = id;
 	}
 
-	public Double getValor_servicos() {
-		return valor_servicos;
-	}
-
-	public void setValor_servicos(Double valor_servicos) {
-		this.valor_servicos = valor_servicos;
-	}
-
-	public Double getValor_produtos() {
-		return valor_produtos;
-	}
-
-	public void setValor_produtos(Double valor_produtos) {
-		this.valor_produtos = valor_produtos;
-	}
-
 	public Double getValor_total() {
 		return valor_total;
 	}
@@ -92,12 +71,12 @@ public class Pedido implements Serializable{
 	public void setValor_total(Double valor_total) {
 		this.valor_total = valor_total;
 	}
-
-	public String getSituacao() {
+	
+	public SitucaoPedidoEnum getSituacao() {
 		return situacao;
 	}
 
-	public void setSituacao(String situacao) {
+	public void setSituacao(SitucaoPedidoEnum situacao) {
 		this.situacao = situacao;
 	}
 

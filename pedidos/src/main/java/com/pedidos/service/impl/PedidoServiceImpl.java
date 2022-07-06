@@ -5,7 +5,6 @@ import java.util.Objects;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +16,8 @@ import com.pedidos.dao.PedidoDaoPage;
 import com.pedidos.dto.PedidoDTO;
 import com.pedidos.exceptions.ExceptionsService;
 import com.pedidos.model.Pedido;
+import com.pedidos.models.enums.SitucaoPedidoEnum;
+import com.pedidos.models.enums.TipoProdutoEnum;
 import com.pedidos.service.PedidoService;
 
 @Service
@@ -49,7 +50,7 @@ public class PedidoServiceImpl implements PedidoService {
 	}
 
 	private boolean retornarPedidoAbertoParaProcessarValores(PedidoDTO pedidoDTO) {
-		return ! Objects.equals(pedidoDTO.getSituacao(), "FECHADO");
+		return ! Objects.equals(pedidoDTO.getSituacao(), SitucaoPedidoEnum.FECHADO);
 	}
 
 	@Override
@@ -58,10 +59,6 @@ public class PedidoServiceImpl implements PedidoService {
 			if  (Objects.isNull(pedidoDTO.getData_pedido())) {
 				pedidoDTO.setData_pedido(new Date());
 			}	
-			pedidoDTO.setValor_produtos(this.retornarValorTotal(pedidoDTO.getId(), "PRODUTO"));
-			pedidoDTO.setValor_servicos(this.retornarValorTotal(pedidoDTO.getId(), "SERVICO"));
-			if (Objects.isNull(pedidoDTO.getPercentualDesconto()))
-				pedidoDTO.setPercentualDesconto(NumberUtils.INTEGER_ZERO);
 			pedidoDTO.setValor_total(this.retornarValorTotem(pedidoDTO));			
 		}
 		return this.converter.convertPedidoToPedidoDTO(this.pedidoDaoPage.save(this.converter.convertPedidoDTOtoPedido(pedidoDTO)));
@@ -69,33 +66,29 @@ public class PedidoServiceImpl implements PedidoService {
 	
 	@Override
 	public void processsarDesconto (PedidoDTO pedidoDTO) {
-		if (! Objects.equals(pedidoDTO.getSituacao(), "ABERTO")) {
+		if (! Objects.equals(pedidoDTO.getSituacao(), SitucaoPedidoEnum.ABERTO)) {
 			throw new ExceptionsService("Não é possível inserir desconto se o pedido não estiver em Aberto");
 		}
 		this.processarValoresCapaPedido(pedidoDTO);
 	}
 	
 	private Double retornarValorTotem(PedidoDTO pedidoDTO) {
-		Double desconto = this.retornarValorDesconto(pedidoDTO) ;
-		Double valorFinalProdutos = this.retornarValorFinalProdutos(pedidoDTO, desconto);
-		return valorFinalProdutos + pedidoDTO.getValor_servicos();
+		return this.retornarValorFinalProdutos(pedidoDTO,  this.retornarValorDesconto(pedidoDTO)) + this.retornarValorTotal(pedidoDTO.getId(), TipoProdutoEnum.SERVICO);
 	}
 
 	private Double retornarValorFinalProdutos(PedidoDTO pedidoDTO, Double desconto) {
-		Double valorFinalProdutos = pedidoDTO.getValor_produtos() - desconto;
-		return valorFinalProdutos;
+		return retornarValorTotal(pedidoDTO.getId(), TipoProdutoEnum.PRODUTO) - desconto;
 	}
 
 	private double retornarValorDesconto(PedidoDTO pedidoDTO) {
-		return pedidoDTO.getValor_produtos()  * pedidoDTO.getPercentualDesconto() / 100;
+		return this.retornarValorTotal(pedidoDTO.getId(), TipoProdutoEnum.PRODUTO)  * pedidoDTO.getPercentualDesconto() / 100;
 	}
 	
-
 	private boolean retornarPedidoAndamento(PedidoDTO pedidoDTO) {
-		return Objects.nonNull(pedidoDTO.getSituacao()) && Objects.equals(pedidoDTO.getSituacao(), "ABERTO");
+		return Objects.nonNull(pedidoDTO.getSituacao()) && Objects.equals(pedidoDTO.getSituacao(), SitucaoPedidoEnum.ABERTO);
 	}
 	
-	private Double retornarValorTotal(UUID uuid, String tipoProduto) {
+	private Double retornarValorTotal(UUID uuid, TipoProdutoEnum tipoProduto) {
 		return this.pedidoItemServiceImpl.retornarValorTotalItem( uuid, tipoProduto);
 	}
 	
@@ -103,14 +96,17 @@ public class PedidoServiceImpl implements PedidoService {
 		if (Objects.isNull(pedidoDTO)) {
 			return "Pedido inválido (null)";
 		}
+		if (Objects.isNull(pedidoDTO.getPercentualDesconto())) {
+			return "Porcentagem de desconto inválida (null)";
+		}
 		return StringUtils.EMPTY;
 	}
 
 	private void processarSituacaoAtualPedido(PedidoDTO pedidoDTO) {
-		if (Objects.isNull(pedidoDTO.getSituacao()) || StringUtils.isEmpty(pedidoDTO.getSituacao())) {
-			pedidoDTO.setSituacao("ABERTO");
-		} else if (Objects.equals(pedidoDTO.getSituacao(), "ABERTO")) {
-			pedidoDTO.setSituacao("FECHADO");
+		if (Objects.isNull(pedidoDTO.getSituacao())) {
+			pedidoDTO.setSituacao(SitucaoPedidoEnum.ABERTO);
+		} else if (Objects.equals(pedidoDTO.getSituacao(), SitucaoPedidoEnum.ABERTO)) {
+			pedidoDTO.setSituacao(SitucaoPedidoEnum.FECHADO);
 		}
 	}
 	
@@ -127,6 +123,4 @@ public class PedidoServiceImpl implements PedidoService {
 	public Long retornarExistePedidoAtivoProduto(UUID idProduto) {
 		return pedidoDaoPage.retornarExistePedidoAtivoProduto(idProduto);
 	}
-
-
 }

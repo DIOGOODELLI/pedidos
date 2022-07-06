@@ -55,7 +55,7 @@ public class ProdutoServicoServiceImp implements ProdutoServicoService {
 		if (Objects.isNull(produtoServicoDTO.getEnabled())) {
 			return "É necessário indicar item está ativo";
 		}
-		if (Objects.isNull(produtoServicoDTO.getTipo()) || Objects.equals(StringUtils.EMPTY, produtoServicoDTO.getTipo())) {
+		if (Objects.isNull(produtoServicoDTO.getTipo())) {
 			return "Tipo do item é obrigatório";
 		}
 		if (! produtoServicoDTO.getEnabled() && pedidoServiceImpl.retornarExistePedidoAtivoProduto(produtoServicoDTO.getId()) > 0) {

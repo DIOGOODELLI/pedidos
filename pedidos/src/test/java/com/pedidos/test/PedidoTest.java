@@ -36,14 +36,14 @@ public class PedidoTest {
 	private static final String URL_INSERIR_PEDIDO_ITEM  = "api/pedidoItem/gravarPedidoItem";
 	private static final String URL_RETORNO_PRODUTO_SERVICO = "api/produtoServico/retornarProdutoServico";
 	
-	private static final String IP_PORTA = "http://localhost:8080/";
+	private static final String IP_PORTA = "http://localhost:8000/";
 	
 	@Test
 	public void GravarPedido() throws Exception{
 		//ADD CAPA DO PEDIDO
 		PedidoDTO pedidoDTO = new PedidoDTO();
 		pedidoDTO.setPercentualDesconto(10);
-		pedidoDTO.setNumero_pedido(99l);
+		pedidoDTO.setNumero_pedido(12121l);
 		RestTemplate restTemplate = new RestTemplate();		
 		HttpEntity<PedidoDTO> request = new HttpEntity<PedidoDTO>(pedidoDTO);
 		ResponseEntity<PedidoDTO> result  = restTemplate.exchange(IP_PORTA.concat(URL_INSERIR_PEDIDO), HttpMethod.POST, request, PedidoDTO.class);
@@ -60,7 +60,7 @@ public class PedidoTest {
 			HttpEntity<PedidoItemDTO> requestItem = new HttpEntity<PedidoItemDTO>(pedidoItemDTO);
 			restTemplate.exchange(IP_PORTA.concat(URL_INSERIR_PEDIDO_ITEM), HttpMethod.POST, requestItem, PedidoItemDTO.class);		
 		} else {
-			System.out.println("RORDAR A ROTINA DO ITENS DO PRODUTO ANTES");
+			System.out.println("RODAR A ROTINA DO ITENS DO PRODUTO ANTES");
 		}
 	}
 	
@@ -102,6 +102,8 @@ public class PedidoTest {
 			System.out.println("-----------CAPA DO PEDIDO------------------");
 			System.out.println(pedido.getId());
 			System.out.println(pedido.getSituacao());
+			System.out.println(pedido.getPercentualDesconto());
+			System.out.println(pedido.getValor_total());
 			System.out.println("------------------------------------------");
 			System.out.println("----------ITENS DO PEDIDO----------------");
 			

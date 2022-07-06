@@ -11,15 +11,17 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import org.apache.commons.lang3.StringUtils;
+
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+
 import com.pedidos.dto.PedidoDTO;
 import com.pedidos.model.Pedido;
+import com.pedidos.models.enums.SitucaoPedidoEnum;
 
 @Repository
 public class PedidoDaoImpl implements PedidoDao {
@@ -36,8 +38,8 @@ public class PedidoDaoImpl implements PedidoDao {
 		if (Objects.nonNull(filtros.getNumero_pedido()) && filtros.getNumero_pedido() > NumberUtils.LONG_ZERO) {
 			predicates.add(criterio.equal(root.get("numero_pedido"), filtros.getNumero_pedido()));
 		}
-		if (Objects.nonNull(filtros.getSituacao()) && StringUtils.isNotEmpty(filtros.getSituacao())) {
-			predicates.add(criterio.like(criterio.lower(root.<String>get("situacao")), filtros.getSituacao().toLowerCase() ));
+		if (Objects.nonNull(filtros.getSituacao())) {
+			predicates.add(criterio.equal(root.<SitucaoPedidoEnum>get("situacao"), filtros.getSituacao()));
 		}
 		Predicate[] predArray = new Predicate[predicates.size()];
 		predicates.toArray(predArray);

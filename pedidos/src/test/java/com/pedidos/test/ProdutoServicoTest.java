@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.pedidos.dto.ProdutoServicoDTO;
+import com.pedidos.models.enums.TipoProdutoEnum;
 import com.pedidos.utils.RestResponsePage;
 
 @ExtendWith(SpringExtension.class)
@@ -24,15 +25,15 @@ public class ProdutoServicoTest {
 	
 	private static final String URL_RETORNO_PRODUTO_SERVICO = "api/produtoServico/retornarProdutoServico";
 	private static final String URL_INSERIR_PRODUTO_SERVICO = "api/produtoServico/gravarProdutoServico";
-	private static final String IP_PORTA = "http://localhost:8080/";
+	private static final String IP_PORTA = "http://localhost:8000/";
 	
 	@Test
 	public void GravarProdutoServico() throws Exception{
 		ProdutoServicoDTO produtoServicoDTO = new ProdutoServicoDTO();
-		produtoServicoDTO.setDescricao("TERRA PLANAJEM");
-		produtoServicoDTO.setEnabled(false);
-		produtoServicoDTO.setTipo("SERVICO");
-		//this.chamarServicoGravarProduto(produtoServicoDTO);
+		produtoServicoDTO.setDescricao("NOVO ITEM 3");
+		produtoServicoDTO.setEnabled(true); 
+		produtoServicoDTO.setTipo(TipoProdutoEnum.PRODUTO);
+		this.chamarServicoGravarProduto(produtoServicoDTO);
 	}
 
 	private void chamarServicoGravarProduto(ProdutoServicoDTO produtoServicoDTO) {

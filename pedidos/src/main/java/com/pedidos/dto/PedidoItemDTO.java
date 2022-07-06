@@ -13,6 +13,7 @@ public class PedidoItemDTO implements Serializable{
 	private Double quantidade;
 	private Double valor_total;
 	private UUID id;
+	private Boolean enabled;
 	
 	public UUID getId() {
 		return id;
@@ -60,5 +61,13 @@ public class PedidoItemDTO implements Serializable{
 	
 	public void setValor_total(Double valor_total) {
 		this.valor_total = valor_total;
+	}
+
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
 	}
 }
